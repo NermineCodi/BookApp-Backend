@@ -29,7 +29,7 @@ const ModelSchema = new Schema({
 
 
 ModelSchema.pre(['find', 'findOne'], function () {
-  this.populate(['author']);
+  this.populate(['author', 'category']);
 });
 
 const Model = model('Book', ModelSchema);

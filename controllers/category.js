@@ -1,6 +1,77 @@
 const Model = require('../models/category');
 
 class Controller {
+
+  getTreeWithAggregate(req, res, next) {
+    Model.aggregate([
+        {
+            $lookup: {
+                from: 'books',
+                as: 'bookssss',
+                let: { "catId": "$_id" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $in: ["$$catId", "$category"]
+                            }
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'authors',
+                            localField: 'author',
+                            foreignField: '_id',
+                            as: 'author'
+                        }
+                    },
+                    {
+                        $addFields: {
+                            "author": {
+                                $arrayElemAt: ["$author", 0]
+                            }
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'categories',
+                            localField: 'category',
+                            foreignField: '_id',
+                            as: 'category'
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'files',
+                            localField: 'image',
+                            foreignField: '_id',
+                            as: 'image'
+                        }
+                    }
+                    ,
+                    {
+                        $addFields: {
+                            "image": {
+                                $arrayElemAt: ["$image", 0]
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ], (err, response) => {
+        if (err) return next(err);
+        res.status(200).send({ success: true, response });
+    });
+}
+
+  getTree(req, res, next) {
+    Model.find({}).populate('books').exec((err, response) => {
+        if (err) return next(err);
+        res.status(200).send({ success: true, response });
+    });
+}
+
   getAll(req, res, next) {
     Model.find({}, (err, response) => {
       if (err) return next(err);
