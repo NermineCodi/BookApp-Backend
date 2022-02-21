@@ -24,6 +24,7 @@ var usersRouter = require('./routes/users');
 var authorsRouter = require('./routes/authors');
 var booksRouter = require('./routes/books');
 var categoriesRouter = require('./routes/categories');
+var filesRouter = require('./routes/files');
 
 //using middleware
 app.use(logger('dev'));
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors()); // allows cross domain requests
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 //using my routes
@@ -39,6 +41,7 @@ app.use('/users', usersRouter);
 app.use('/api/authors', authorsRouter);
 app.use('/api/books', booksRouter);
 app.use('/api/categories', categoriesRouter);
+app.use('/api/files', filesRouter);
 
 
 // create an error object,catch 404 and forward to error handler
