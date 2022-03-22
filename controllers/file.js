@@ -32,7 +32,7 @@ class Controller {
     }
 
     post(req, res, next) {
-        console.log(req.file)
+        console.log("****", JSON.stringify(req.body))
         let { filename: name, mimetype: type } = req.file || {};
         //get the extension from the end of the filename (after last '.'),
         // if the name doesn't exist then it's = ''
